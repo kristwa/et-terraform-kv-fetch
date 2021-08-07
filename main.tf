@@ -7,9 +7,14 @@ terraform {
   }
 }
 
+data "azurerm_key_vault" "sourcevault" {
+  resource_group_name = var.source_keyvault_rg
+  name = var.source_keyvault_name
+}
+
 data "azurerm_key_vault_secret" "source" {
   name      = var.source_secret_name
-  vault_uri = var.source_keyvault_uri
+  key_vault_id = data.azurerm_key_vault.sourcevault.id
 }
 
 resource "azurerm_key_vault_secret" "destination" {
